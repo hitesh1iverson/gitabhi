@@ -1,0 +1,284 @@
+#lang racket
+;;;2 Q1 
+;;; Purpose
+;;;----------------
+;;: To find the errors in program by debugging
+
+;;; Definition
+;;;----------------
+(cons 1 2)
+(append 1 2)
+(cons 1 '(2))
+(append 1 '(2))
+(cons '(1 2) '(4 5))
+(append '(1 2) '(4 5))
+(cons '(1 2) 6)
+(append '(1 2) 6)
+(cons 1 2 3 4)
+(append '(1 2) '(4 5 7 8 10) '(3 6 9))
+(append '(1 2) '(2 1) 3 '(3))
+
+;;;The following errors are found :
+;;;---------------------------------
+;(append 1 2)-> append cannot work possible for a single digit
+
+;(append 1 '(2))-> append cannot work possible for a single digit
+
+;(cons 1 2 3 4)->cons cannot work for more than 2 arguments
+
+;(append '(1 2) '(2 1) 3 '(3))-> append cannot work for a single digit in the middle of arguments. If the single digit is at the end , it will work.
+
+
+#lang racket
+;;;3 Q1
+;; purpose
+;;;----------------
+;;: Construct a list cities made up of the following lists
+;;;
+;;;("Che" 13 80)
+;;;("Del" 29 77)
+;;;("Mum" 18 73)
+;;;("Kol" 22 88)
+
+;;; contract
+;;;----------------
+;;; list? -> (list of cities?)
+
+;;;usage
+;;;-----------------
+;;;cities -> '(("Che" 13 80) ("Del" 29 77) ("Mum" 18 73) ("Kol" 22 88))
+
+;;; Definition
+;;;----------------
+(define a (list'("Che" 13 80) '("Del" 29 77) '("Mum" 18 73) '("Kol" 22 88)))
+(define cities a)
+
+
+#lang racket
+;;;3 Q2
+;;; purpose
+;;;----------------
+;;: Write a function lat-long that takes a city code as an argument and returns a list consists
+;;; of latitudes and longitudes
+;;;("Che" 13 80)
+;;;("Del" 29 77)
+;;;("Mum" 18 73)
+;;;("Kol" 22 88)
+
+;;; contract
+;;;----------------
+;;; city code ? -> (latitude longitude?)
+
+;;;usage
+;;;-----------------
+;;;(lat-long "Del")-> '(29 77)
+
+;;; Definition
+;;;----------------
+(define (lat-long a)
+  (cond[(eq? a "Che") '(13 80)]
+  [(eq? a "Del") '(29 77)]
+  [(eq? a "Mum") '(18 73)]
+  [(eq? a "Kol") '(22 88)]
+  [else #f]))
+
+
+;;;4 Q2
+;;;lang racket
+;;; purpose
+;;;----------------
+;;: Write a function below that takes a natural number n and returns a list starting 
+;;;from 0 containing numbers up to but not including n
+
+;;; contract
+;;;----------------
+;;; nat-below: nat? -> (listof nat?)
+
+;;;usage
+;;;-----------------
+;;;(nat-below 0)=> '()
+;;;(nat-below 1)=> '(0)
+;;;(nat-below 3)=> '(0 1 2)
+
+;;; Definition
+;;;----------------
+(require racket/trace)
+(define nat-below
+  (trace-lambda (n)
+    (if (= n 0)
+        '()
+        (let ([t (nat-below (- n 1))])
+          (append t (list (- n 1)))))))
+
+;;;4 Q3
+#lang racket
+;;; purpose
+;;;----------------
+;;: Write a function nat-below-iter that takes a natural number n and returns a 
+;;;list starting from 0 containing numbers up to but not including n. 
+
+;;; contract
+;;;----------------
+;;; nat-below: nat? -> (list of nat?)
+
+;;;usage
+;;;-----------------
+;;;(nat-below-iter 0)=> '()
+;;;(nat-below-iter 1)=> '(0)
+;;;(nat-below-iter 3)=> '(0 1 2)
+
+;;; Definition
+;;;----------------
+(require racket/trace)
+(define count 0)
+(define t '())
+(define (nat-below-iter n)
+  (cond
+    [(equal? count n) (print (reverse t))]
+  [else
+  (set! t (cons count t))
+  (set! count (+ 1 count))
+  (nat-below-iter n)]
+  )
+  )
+
+(trace nat-below-iter)
+
+;;;5 Q1
+#lang racket
+;;; purpose
+;;;----------------
+;;: Write a function to find the length of a given list
+
+;;; contract
+;;;----------------
+;;; list? -> (no. of letters in a list?)
+
+;;;usage
+;;;-----------------
+;;;(list-length '(1 2 3))=> 3
+;;;(list-length '(1 2 3 4 5))=> 5
+;;;(list-length '())=> 0
+
+;;; Definition
+;;;----------------
+(define n 0)
+(define (list-length a)
+(cond[(eq? a '()) n]
+[else(set! n (+ n 1))
+(list-length (cdr a))]))
+
+;;;5 Q2
+#lang racket
+;;; purpose
+;;;----------------
+;;: Write a function list-length-iter that is the iterative version.
+
+;;; contract
+;;;----------------
+;;; list? -> (no. of letters in a list?)
+
+;;;usage
+;;;-----------------
+;;;(list-length '(1 2 3))=> 3
+;;;(list-length '(1 2 3 4 5))=> 5
+;;;(list-length '())=> 0
+
+;;; Definition
+;;;----------------
+(define a '())
+(define (list-length a)
+  (cond
+    [(empty? a) 0]
+    [else
+     (+ 1 (list-length (cdr a)))]
+    )
+  )
+
+;;;6
+#lang racket
+;;; purpose
+;;;----------------
+;;: Write a function max to find the maximum no. in the list.
+
+;;; contract
+;;;----------------
+;;; list? -> (max no. in the list?)
+
+;;;usage
+;;;-----------------
+;;;(max '(1 2 3))=> 3
+;;;(max '(1 5 7 7))=> 7
+
+;;; Definition
+;;;----------------
+(require racket/trace)
+(define b 0)
+(define (max a)
+  (if(null? a) 
+     b
+  (if(> (car a) b) (= b (car a))
+     b)
+  (max (cdr a))))
+(trace max)    
+
+;;;7 Q1
+#lang racket
+;;; purpose
+;;;----------------
+;;: Write a function list-add2 that takes a list of numbers and add 2 to each element.
+
+;;; contract
+;;;----------------
+;;; list? -> (add 2 to each element of the given list?)
+
+;;;usage
+;;;-----------------
+;;;(list-add2 '(1 2 3))=> '(3 4 5)
+;;;(list-add2 '(1 2 3 4 5))=> '(3 4 5 6 7)
+
+;;; Definition
+;;;----------------
+(require racket/trace)
+(define b '())
+(define (list-add2 a)
+(lambda (car a) (+ 2 (car a))) 
+(cons  b  (car a))
+(if (eq? a '())
+    b
+(list-add2 (cdr a))))
+(trace list-add2)
+
+;;;7 Q2
+#lang racket
+
+;;; purpose
+;;;----------------
+;;: Write a function list-add2-iter that takes a list of numbers and add 2 to each element.
+
+;;; contract
+;;;----------------
+;;; list? -> (add 2 to each element of the given list?)
+
+;;;usage
+;;;-----------------
+;;;(list-add2-iter '(1 2 3))=> '(3 4 5)
+;;;(list-add2-iter '(1 2 3 4 5))=> '(3 4 5 6 7)
+
+;;; Definition
+;;;----------------
+(define a '())
+(define b '())
+
+(define (list-add2-iter a)
+  (cond
+    [(empty? a)  (reverse b)]
+ [else
+  (set! b (cons (+ 2 (first a))  b))
+ (list-add2-iter (rest a))]
+  )
+<<<<<<< HEAD
+  )
+=======
+  )
+>>>>>>> b070487e522fe6d030f2f5de28d384b18023eb63
